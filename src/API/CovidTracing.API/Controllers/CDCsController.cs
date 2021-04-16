@@ -103,7 +103,7 @@ namespace CovidTracing.API.Controllers
         // PUT api/<CTSController>/5
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(CDC), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> UpdateRoom([FromBody] CDC cdc)
+        public async Task<IActionResult> Update([FromBody] CDC cdc)
         {
             if (cdc.Id != cdc.Id)
             {
