@@ -12,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using CovidTracing.API.Data;
+using CovidTracing.API.Repository.Interface;
+using CovidTracing.API.Repository;
 
 namespace CovidTracing.API
 {
@@ -31,6 +33,10 @@ namespace CovidTracing.API
 
             services.AddDbContext<CovidTracingAPIDBContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("CovidTracingAPIDBContext")));
+
+            services.AddSingleton<IPHIRepository,PHIRepository>();
+            services.AddSingleton<ICDCRepository,CDCRepository>();
+            services.AddSingleton<ICitizensRepository,CitizensRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
