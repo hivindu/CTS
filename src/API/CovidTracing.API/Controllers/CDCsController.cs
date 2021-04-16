@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CovidTracing.API.Data;
 using CovidTracing.API.Entities;
+using System.Net;
+using CovidTracing.API.Repository.Interface;
 
 namespace CovidTracing.API.Controllers
 {
@@ -14,97 +16,109 @@ namespace CovidTracing.API.Controllers
     [ApiController]
     public class CDCsController : ControllerBase
     {
-        private readonly CovidTracingAPIDBContext _context;
+        private readonly ICDCRepository _repository;
 
-        public CDCsController(CovidTracingAPIDBContext context)
+        public CDCsController(ICDCRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
-        // GET: api/CDCs
+        // GET: api/<CTSController>
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<CDC>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<CDC>>> GetCDC()
         {
-            return await _context.CDC.ToListAsync();
+            var CDC = await _repository.GetCDC();
+
+            return Ok(CDC);
         }
 
-        // GET: api/CDCs/5
+        // GET api/<CTSController>/5
         [HttpGet("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CDC), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<CDC>> GetCDC(int id)
         {
-            var cDC = await _context.CDC.FindAsync(id);
+            var cdc = await _repository.GetCDC(id);
 
-            if (cDC == null)
+            if (cdc == null)
             {
                 return NotFound();
             }
 
-            return cDC;
+            return Ok(cdc);
         }
 
-        // PUT: api/CDCs/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCDC(int id, CDC cDC)
+        [HttpGet("[action]/{id}")]
+        [ProducesResponseType(typeof(IEnumerable<CDC>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<CDC>> DeactivateUser(Citizen Id)
         {
-            if (id != cDC.Id)
+            var cdc = await _repository.DeactivateUser(Id);
+
+            if (cdc == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(cdc);
+        }
+
+        [HttpGet("[action]/{id}")]
+        [ProducesResponseType(typeof(IEnumerable<CDC>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<CDC>> DeactivatePHI(PHI Id)
+        {
+            var cdc = await _repository.DeactivatePHI(Id);
+
+            if (cdc == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(cdc);
+        }
+
+        [HttpGet("[action]/{latitude, longtitude}")]
+        [ProducesResponseType(typeof(IEnumerable<CDC>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<CDC>> GetTravelLogByCDC(double longtitude, double latitude)
+        {
+            var cdc = await _repository.GetTravelLogByCDC(longtitude, latitude);
+
+            if (cdc == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(cdc);
+        }
+
+        // POST api/<CTSController>
+        [HttpPost]
+        public async Task<ActionResult<CDC>> CreateCDC(CDC cdc)
+        {
+            await _repository.Create(cdc);
+
+            return CreatedAtAction("GetCDC", new { id = cdc.Id }, cdc);
+        }
+
+        // PUT api/<CTSController>/5
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(CDC), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> UpdateRoom([FromBody] CDC cdc)
+        {
+            if (cdc.Id != cdc.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(cDC).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CDCExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(await _repository.Update(cdc));
         }
 
-        // POST: api/CDCs
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<CDC>> PostCDC(CDC cDC)
-        {
-            _context.CDC.Add(cDC);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetCDC", new { id = cDC.Id }, cDC);
-        }
-
-        // DELETE: api/CDCs/5
+        // DELETE api/<CTSController>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<CDC>> DeleteCDC(int id)
+        [ProducesResponseType(typeof(CDC), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<CDC>> Delete(int id)
         {
-            var cDC = await _context.CDC.FindAsync(id);
-            if (cDC == null)
-            {
-                return NotFound();
-            }
-
-            _context.CDC.Remove(cDC);
-            await _context.SaveChangesAsync();
-
-            return cDC;
-        }
-
-        private bool CDCExists(int id)
-        {
-            return _context.CDC.Any(e => e.Id == id);
+            return Ok(await _repository.Delete(id));
         }
     }
 }
