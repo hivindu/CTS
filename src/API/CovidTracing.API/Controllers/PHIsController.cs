@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using CovidTracing.API.Data;
+using CovidTracing.API.Entities;
+using CovidTracing.API.Repository.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CovidTracing.API.Data;
-using CovidTracing.API.Entities;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace CovidTracing.API.Controllers
 {
@@ -14,97 +13,90 @@ namespace CovidTracing.API.Controllers
     [ApiController]
     public class PHIsController : ControllerBase
     {
-        private readonly CovidTracingAPIDBContext _context;
+        private readonly IPHIRepository _repository;
 
-        public PHIsController(CovidTracingAPIDBContext context)
+        public PHIsController(IPHIRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: api/PHIs
-        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<PHI>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<PHI>>> GetPHI()
         {
-            return await _context.PHI.ToListAsync();
+            var PHI = await _repository.GetPHI();
+
+            return Ok(PHI);
         }
 
         // GET: api/PHIs/5
         [HttpGet("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(PHI), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<PHI>> GetPHI(int id)
         {
-            var pHI = await _context.PHI.FindAsync(id);
+            var phi = await _repository.GetPHI(id);
 
-            if (pHI == null)
+            if (phi == null)
             {
                 return NotFound();
             }
 
-            return pHI;
+            return Ok(phi);
         }
 
-        // PUT: api/PHIs/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPHI(int id, PHI pHI)
+        [HttpPost]
+        public async Task<ActionResult<CDC>> Create(PHI phi)
         {
-            if (id != pHI.Id)
+            await _repository.Create(phi);
+
+            return CreatedAtAction("GetPHI", new { id = phi.Id }, phi);
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(PHI), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Update([FromBody] PHI phi)
+        {
+            if (phi.Id != phi.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(pHI).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PHIExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/PHIs
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<PHI>> PostPHI(PHI pHI)
-        {
-            _context.PHI.Add(pHI);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetPHI", new { id = pHI.Id }, pHI);
+            return Ok(await _repository.Update(phi));
         }
 
         // DELETE: api/PHIs/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<PHI>> DeletePHI(int id)
+        [ProducesResponseType(typeof(PHI), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<PHI>> Delete(int id)
         {
-            var pHI = await _context.PHI.FindAsync(id);
-            if (pHI == null)
+            return Ok(await _repository.Delete(id));
+        }
+
+        [HttpGet("[action]/{latitude, longtitude}")]
+        [ProducesResponseType(typeof(IEnumerable<PHI>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<PHI>> GetTravelLogByPHI(double longtitude, double latitude)
+        {
+            var phi = await _repository.GetTravelLogByPHI(longtitude, latitude);
+
+            if (phi == null)
             {
                 return NotFound();
             }
 
-            _context.PHI.Remove(pHI);
-            await _context.SaveChangesAsync();
-
-            return pHI;
+            return Ok(phi);
         }
 
-        private bool PHIExists(int id)
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(Citizen), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> UpdateCitizen([FromBody] Citizen citizen)
         {
-            return _context.PHI.Any(e => e.Id == id);
+            if (citizen.Id != citizen.Id)
+            {
+                return BadRequest();
+            }
+
+            return Ok(await _repository.UpdateCitizen(citizen));
         }
     }
 }

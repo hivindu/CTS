@@ -57,7 +57,7 @@ namespace CovidTracing.API.Controllers
         }
 
         [HttpPut("{id}")]
-        [ProducesResponseType(typeof(CDC), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Citizen), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Update([FromBody] Citizen citizen)
         {
             if (citizen.Id != citizen.Id)
@@ -70,16 +70,16 @@ namespace CovidTracing.API.Controllers
 
         // POST api/<CTSController>
         [HttpPost]
-        public async Task<ActionResult<CDC>> Create(Citizen citizen)
+        public async Task<ActionResult<Citizen>> Create(Citizen citizen)
         {
             await _repository.Create(citizen);
 
-            return CreatedAtAction("GetCDC", new { id = citizen.Id }, citizen);
+            return CreatedAtAction("GetCitizen", new { id = citizen.Id }, citizen);
         }
 
         [HttpGet("[action]/{latitude, longtitude}")]
         [ProducesResponseType(typeof(IEnumerable<Citizen>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<CDC>> UpdateTravel(double longtitude, double latitude)
+        public async Task<ActionResult<Citizen>> UpdateTravel(double longtitude, double latitude)
         {
             var citizen = await _repository.UpdateTravel(longtitude, latitude);
 
