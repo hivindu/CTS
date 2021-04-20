@@ -11,26 +11,35 @@ namespace CovidTracing.API.Repository
 {
     public class CDCRepository : ICDCRepository
     {
+        // Error correction POINT - 1
         private readonly CovidTracingAPIDBContext _context;
 
+        //Error correction - POINT 2
         public CDCRepository(CovidTracingAPIDBContext context)
         {
             _context = context;
         }
-
-        public async Task<IEnumerable<CDC>> GetCDC()
+        public async Task Create(CDC cdc)
         {
-            string query = "EXEC SelAllCDC;";
-            return await _context.CDC.FromSqlRaw(query).ToListAsync();
+            int id = cdc.Id;
+            string name = cdc.Name;
+            string nic = cdc.NIC;
+            string password = cdc.Password;
+
+            //var rest = _context.Database
         }
 
-        public async Task<IEnumerable<CDC>> GetCDC(int Id)
+        public Task<IEnumerable<CDC>> DeactivatePHI(PHI Id)
         {
-            string query = "EXEC SelCDCById @id=" + Id + ";";
-            return _context.CDC.FromSqlRaw(query).AsEnumerable();
+            throw new NotImplementedException();
         }
 
         public Task<IEnumerable<CDC>> DeactivatePHI(int Id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<CDC>> DeactivateUser(Citizen Id)
         {
             throw new NotImplementedException();
         }
@@ -40,20 +49,36 @@ namespace CovidTracing.API.Repository
             throw new NotImplementedException();
         }
 
-        public Task Create(CDC cdc)
+        public async Task<bool> Delete(int Id)
         {
-            throw new NotImplementedException();
+            string query = "";
+
+            var res = _context.Database.ExecuteSqlCommand("");
+
+            return Convert.ToBoolean(res);
         }
 
-        public Task<bool> Update(CDC cdc)
+        public async Task<IEnumerable<CDC>> GetCDC()
         {
-            throw new NotImplementedException();
+            string query = "";
+            return await _context.CDC.FromSqlRaw(query).ToListAsync();
         }
 
-        public Task<bool> Delete(int Id)
+        public async Task<IEnumerable<CDC>> GetCDC(int Id)
         {
-            throw new NotImplementedException();
+            return await _context.CDC.FromSqlRaw("").ToListAsync();
         }
 
+        public async Task<IEnumerable<CDC>> GetTravelLogByCDC(double Longtitude, double Latitude)
+        {
+            return await _context.CDC.FromSqlRaw("").ToListAsync();
+        }
+
+        public async Task<bool> Update(CDC cdc)
+        {
+            var res = _context.Database.ExecuteSqlCommand("");
+
+            return Convert.ToBoolean(res);
+        }
     }
 }

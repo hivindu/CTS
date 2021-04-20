@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CovidTracing.API.Data;
 using CovidTracing.API.Entities;
+using System.Net;
+using CovidTracing.API.Repository.Interface;
 
 namespace CovidTracing.API.Controllers
 {
@@ -14,97 +16,79 @@ namespace CovidTracing.API.Controllers
     [ApiController]
     public class CitizensController : ControllerBase
     {
-        private readonly CovidTracingAPIDBContext _context;
+        private readonly ICitizensRepository _repository;
 
-        public CitizensController(CovidTracingAPIDBContext context)
+        public CitizensController(ICitizensRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: api/Citizens
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Citizen>>> GetCitizen()
+        [ProducesResponseType(typeof(IEnumerable<CDC>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<CDC>>> GetCitizen()
         {
-            return await _context.Citizen.ToListAsync();
+            var CDC = await _repository.GetCitizen();
+
+            return Ok(CDC);
         }
 
         // GET: api/Citizens/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Citizen>> GetCitizen(int id)
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CDC), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<CDC>> GetCitizen(int id)
         {
-            var citizen = await _context.Citizen.FindAsync(id);
+            var cdc = await _repository.GetCitizen(id);
 
-            if (citizen == null)
+            if (cdc == null)
             {
                 return NotFound();
             }
 
-            return citizen;
-        }
-
-        // PUT: api/Citizens/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCitizen(int id, Citizen citizen)
-        {
-            if (id != citizen.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(citizen).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CitizenExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Citizens
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<Citizen>> PostCitizen(Citizen citizen)
-        {
-            _context.Citizen.Add(citizen);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetCitizen", new { id = citizen.Id }, citizen);
+            return Ok(cdc);
         }
 
         // DELETE: api/Citizens/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Citizen>> DeleteCitizen(int id)
+        [ProducesResponseType(typeof(CDC), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<CDC>> Delete(int id)
         {
-            var citizen = await _context.Citizen.FindAsync(id);
+            return Ok(await _repository.Delete(id));
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(Citizen), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Update([FromBody] Citizen citizen)
+        {
+            if (citizen.Id != citizen.Id)
+            {
+                return BadRequest();
+            }
+
+            return Ok(await _repository.Update(citizen));
+        }
+
+        // POST api/<CTSController>
+        [HttpPost]
+        public async Task<ActionResult<Citizen>> Create(Citizen citizen)
+        {
+            await _repository.Create(citizen);
+
+            return CreatedAtAction("GetCitizen", new { id = citizen.Id }, citizen);
+        }
+
+        [HttpGet("[action]/{latitude, longtitude}")]
+        [ProducesResponseType(typeof(IEnumerable<Citizen>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<Citizen>> UpdateTravel(double longtitude, double latitude)
+        {
+            var citizen = await _repository.UpdateTravel(longtitude, latitude);
+
             if (citizen == null)
             {
                 return NotFound();
             }
 
-            _context.Citizen.Remove(citizen);
-            await _context.SaveChangesAsync();
-
-            return citizen;
-        }
-
-        private bool CitizenExists(int id)
-        {
-            return _context.Citizen.Any(e => e.Id == id);
+            return Ok(citizen);
         }
     }
 }

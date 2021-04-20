@@ -12,9 +12,11 @@ namespace CovidTracing.API.Repository.Interface
 
         Task<IEnumerable<CDC>> GetCDC(int Id);
 
-        Task<IEnumerable<CDC>> DeactivateUser(int Id);
+        Task<IEnumerable<CDC>> GetTravelLogByCDC(double Longtitude, double Latitude);
 
-        Task<IEnumerable<CDC>> DeactivatePHI(int Id);
+        Task<IEnumerable<CDC>> DeactivateUser(Citizen Id);
+
+        Task<IEnumerable<CDC>> DeactivatePHI(PHI Id);
 
         Task Create(CDC cdc);
 
