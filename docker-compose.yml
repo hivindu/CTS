@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+    
+    ctsData:
+        image: mcr.microsoft.com/mssql/server
+
+    covidtracing.api:
+        image: ${DOCKER_REGISTRY-}covidtracingapi
+        build:
+            context: .
+            dockerfile: src/API/CovidTracing.API/Dockerfile

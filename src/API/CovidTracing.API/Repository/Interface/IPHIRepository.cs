@@ -12,8 +12,6 @@ namespace CovidTracing.API.Repository.Interface
 
         Task<IEnumerable<PHI>> GetPHI(int Id);
 
-        Task<IEnumerable<PHI>> GetTravelLogByPHI(double Longtitude, double Latitude);
-
         Task<IEnumerable<PHI>> UpdateCitizen(int id);
 
         Task Create(PHI phi);

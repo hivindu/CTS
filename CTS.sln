@@ -7,7 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AB57C9A3-982
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{8DBE1AC9-9253-47FE-92E8-A9E964FFECC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CovidTracing.API", "src\API\CovidTracing.API\CovidTracing.API.csproj", "{CB466093-89DD-474A-A067-2DACE3D48653}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CovidTracing.API", "src\API\CovidTracing.API\CovidTracing.API.csproj", "{CB466093-89DD-474A-A067-2DACE3D48653}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{924837A4-64D5-44FF-87D7-C7379F5F2A7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +21,10 @@ Global
 		{CB466093-89DD-474A-A067-2DACE3D48653}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB466093-89DD-474A-A067-2DACE3D48653}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB466093-89DD-474A-A067-2DACE3D48653}.Release|Any CPU.Build.0 = Release|Any CPU
+		{924837A4-64D5-44FF-87D7-C7379F5F2A7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{924837A4-64D5-44FF-87D7-C7379F5F2A7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{924837A4-64D5-44FF-87D7-C7379F5F2A7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{924837A4-64D5-44FF-87D7-C7379F5F2A7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

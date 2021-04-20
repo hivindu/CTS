@@ -32,7 +32,7 @@ namespace CovidTracing.API
             services.AddControllers();
 
             services.AddDbContext<CovidTracingAPIDBContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("CovidTracingAPIDBContext")));
+                    options.UseSqlServer(Configuration.GetConnectionString("CovidTracingAPIDBContext")), ServiceLifetime.Singleton);
 
             services.AddSingleton<IPHIRepository,PHIRepository>();
             services.AddSingleton<ICDCRepository,CDCRepository>();

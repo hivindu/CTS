@@ -1,6 +1,7 @@
 ﻿using CovidTracing.API.Data;
 using CovidTracing.API.Entities;
 using CovidTracing.API.Repository.Interface;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,19 +18,22 @@ namespace CovidTracing.API.Repository
             _context = context;
         }
 
-        public Task<IEnumerable<Citizen>> GetCitizen()
+        public async Task<IEnumerable<Citizen>> GetCitizen()
         {
-            throw new NotImplementedException();
+            string query = "EXEC SelAllCitizen;";
+            return await _context.Citizen.FromSqlRaw(query).ToListAsync();
         }
 
-        public Task<IEnumerable<Citizen>> GetCitizen(int Id)
+        public async Task<IEnumerable<Citizen>> GetCitizen(int Id)
         {
-            throw new NotImplementedException();
+            string query = "EXEC SelCitizenById @id=" + Id + ";";
+            return  _context.Citizen.FromSqlRaw(query).AsEnumerable();
         }
 
-        public Task<bool> Update(Citizen citizens)
+        public async Task<IEnumerable<PHI>> GetTravelLogByPHI(double Longtitude, double Latitude)
         {
-            throw new NotImplementedException();
+            string query = "";
+            return _context.PHI.FromSqlRaw(query).AsEnumerable();
         }
 
         public Task<IEnumerable<Citizen>> UpdateTravel(double Latitude, double Longtitude)
@@ -38,6 +42,11 @@ namespace CovidTracing.API.Repository
         }
 
         public Task Create(Citizen citizens)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> Update(Citizen citizens)
         {
             throw new NotImplementedException();
         }

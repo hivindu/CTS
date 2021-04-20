@@ -1,6 +1,7 @@
 ﻿using CovidTracing.API.Data;
 using CovidTracing.API.Entities;
 using CovidTracing.API.Repository.Interface;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,17 @@ namespace CovidTracing.API.Repository
         {
             _context = context;
         }
-        public Task Create(CDC cdc)
+
+        public async Task<IEnumerable<CDC>> GetCDC()
         {
-            throw new NotImplementedException();
+            string query = "EXEC SelAllCDC;";
+            return await _context.CDC.FromSqlRaw(query).ToListAsync();
+        }
+
+        public async Task<IEnumerable<CDC>> GetCDC(int Id)
+        {
+            string query = "EXEC SelCDCById @id=" + Id + ";";
+            return _context.CDC.FromSqlRaw(query).AsEnumerable();
         }
 
         public Task<IEnumerable<CDC>> DeactivatePHI(int Id)
@@ -31,22 +40,7 @@ namespace CovidTracing.API.Repository
             throw new NotImplementedException();
         }
 
-        public Task<bool> Delete(int Id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<CDC>> GetCDC()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<CDC>> GetCDC(int Id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<CDC>> GetTravelLogByCDC(double Longtitude, double Latitude)
+        public Task Create(CDC cdc)
         {
             throw new NotImplementedException();
         }
@@ -55,5 +49,11 @@ namespace CovidTracing.API.Repository
         {
             throw new NotImplementedException();
         }
+
+        public Task<bool> Delete(int Id)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }
