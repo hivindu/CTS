@@ -73,30 +73,30 @@ namespace CovidTracing.API.Controllers
             return Ok(await _repository.Delete(id));
         }
 
-        [HttpGet("[action]/{latitude, longtitude}")]
-        [ProducesResponseType(typeof(IEnumerable<PHI>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<PHI>> GetTravelLogByPHI(double longtitude, double latitude)
-        {
-            var phi = await _repository.GetTravelLogByPHI(longtitude, latitude);
+      //  [HttpGet("[action]/{latitude, longtitude}")]
+       // [ProducesResponseType(typeof(IEnumerable<PHI>), (int)HttpStatusCode.OK)]
+        //public async Task<ActionResult<PHI>> GetTravelLogByPHI(double longtitude, double latitude)
+       // {
+         //   var phi = await _repository.GetTravelLogByPHI(longtitude, latitude);
 
-            if (phi == null)
-            {
-                return NotFound();
-            }
+ //           if (phi == null)
+   //         {
+     //           return NotFound();
+       //     }
 
-            return Ok(phi);
-        }
+        //    return Ok(phi);
+       // }
 
-        [HttpPut("{id}")]
-        [ProducesResponseType(typeof(Citizen), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> UpdateCitizen([FromBody] Citizen citizen)
-        {
-            if (citizen.Id != citizen.Id)
-            {
-                return BadRequest();
-            }
+       // [HttpPut("{id}")]
+       // [ProducesResponseType(typeof(Citizen), (int)HttpStatusCode.OK)]
+       //public async Task<IActionResult> UpdateCitizen([FromBody] Citizen citizen)
+        //{
+         //   if (citizen.Id != citizen.Id)
+           // {
+             //   return BadRequest();
+            //}
 
-            return Ok(await _repository.UpdateCitizen(citizen));
-        }
+            //return Ok(await _repository.UpdateCitizen(citizen));
+       // }
     }
 }

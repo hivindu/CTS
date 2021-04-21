@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,5 +35,8 @@ namespace CovidTracing.API.Entities
         public double Latitude { get; set; }
 
         public double Longtitude { get; set; }
+
+        [DefaultValue(1)]
+        public int Status { get; set; }
     }
 }

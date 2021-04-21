@@ -79,6 +79,9 @@ namespace CovidTracing.API.Migrations
                     b.Property<string>("Proffession")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Citizen");
@@ -111,6 +114,9 @@ namespace CovidTracing.API.Migrations
 
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

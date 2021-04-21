@@ -49,19 +49,7 @@ namespace CovidTracing.API.Controllers
             return Ok(cdc);
         }
 
-        [HttpGet("[action]/{id}")]
-        [ProducesResponseType(typeof(IEnumerable<CDC>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<CDC>> DeactivateUser(Citizen Id)
-        {
-            var cdc = await _repository.DeactivateUser(Id);
-
-            if (cdc == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(cdc);
-        }
+        
 
         [HttpGet("[action]/{id}")]
         [ProducesResponseType(typeof(IEnumerable<CDC>), (int)HttpStatusCode.OK)]
@@ -77,19 +65,6 @@ namespace CovidTracing.API.Controllers
             return Ok(cdc);
         }
 
-        [HttpGet("[action]/{latitude, longtitude}")]
-        [ProducesResponseType(typeof(IEnumerable<CDC>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<CDC>> GetTravelLogByCDC(double longtitude, double latitude)
-        {
-            var cdc = await _repository.GetTravelLogByCDC(longtitude, latitude);
-
-            if (cdc == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(cdc);
-        }
 
         // POST api/<CTSController>
         [HttpPost]

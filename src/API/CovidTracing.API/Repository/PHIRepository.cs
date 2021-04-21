@@ -30,6 +30,17 @@ namespace CovidTracing.API.Repository
             return _context.PHI.FromSqlRaw(query).AsEnumerable();
         }
 
+
+        public Task<bool> AcvtivatePHI(int ID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeactivatePHI(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<PHI>> UpdateCitizen(int id)
         {
             throw new NotImplementedException();

@@ -30,7 +30,7 @@ namespace CovidTracing.API.Repository
             return  _context.Citizen.FromSqlRaw(query).AsEnumerable();
         }
 
-        public async Task<IEnumerable<PHI>> GetTravelLogByPHI(double Longtitude, double Latitude)
+        public async Task<IEnumerable<PHI>> GetTravelLog(double Longtitude, double Latitude)
         {
             string query = "";
             return _context.PHI.FromSqlRaw(query).AsEnumerable();
@@ -52,6 +52,16 @@ namespace CovidTracing.API.Repository
         }
 
         public Task<bool> Delete(int Id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> ActiveCitizen(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeactivateCitizen(int id)
         {
             throw new NotImplementedException();
         }

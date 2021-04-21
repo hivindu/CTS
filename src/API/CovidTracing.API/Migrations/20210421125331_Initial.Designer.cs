@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CovidTracing.API.Migrations
 {
     [DbContext(typeof(CovidTracingAPIDBContext))]
-    [Migration("20210416064239_Initial")]
+    [Migration("20210421125331_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,6 +81,9 @@ namespace CovidTracing.API.Migrations
                     b.Property<string>("Proffession")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Citizen");
@@ -113,6 +116,9 @@ namespace CovidTracing.API.Migrations
 
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

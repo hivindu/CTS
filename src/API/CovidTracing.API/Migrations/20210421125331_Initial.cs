@@ -37,7 +37,8 @@ namespace CovidTracing.API.Migrations
                     Password = table.Column<string>(nullable: true),
                     HealthStatus = table.Column<int>(nullable: false),
                     Latitude = table.Column<double>(nullable: false),
-                    Longtitude = table.Column<double>(nullable: false)
+                    Longtitude = table.Column<double>(nullable: false),
+                    Status = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,7 +57,8 @@ namespace CovidTracing.API.Migrations
                     Address = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
                     Affiliation = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true)
+                    Password = table.Column<string>(nullable: true),
+                    Status = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

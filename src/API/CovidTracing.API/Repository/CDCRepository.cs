@@ -19,6 +19,20 @@ namespace CovidTracing.API.Repository
         {
             _context = context;
         }
+
+        public async Task<IEnumerable<CDC>> GetCDC()
+        {
+            string query = "EXEC SelAllCDC;";
+            return await _context.CDC.FromSqlRaw(query).ToListAsync();
+        }
+
+        public async Task<IEnumerable<CDC>> GetCDC(int Id)
+        {
+            string query = "EXEC SelCDCById @id=" + Id + ";";
+            return _context.CDC.FromSqlRaw(query).AsEnumerable();
+        }
+
+
         public async Task Create(CDC cdc)
         {
             int id = cdc.Id;
@@ -29,24 +43,11 @@ namespace CovidTracing.API.Repository
             //var rest = _context.Database
         }
 
-        public Task<IEnumerable<CDC>> DeactivatePHI(PHI Id)
+        public async Task<bool> Update(CDC cdc)
         {
-            throw new NotImplementedException();
-        }
+            var res = _context.Database.ExecuteSqlCommand("");
 
-        public Task<IEnumerable<CDC>> DeactivatePHI(int Id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<CDC>> DeactivateUser(Citizen Id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<CDC>> DeactivateUser(int Id)
-        {
-            throw new NotImplementedException();
+            return Convert.ToBoolean(res);
         }
 
         public async Task<bool> Delete(int Id)
@@ -58,27 +59,9 @@ namespace CovidTracing.API.Repository
             return Convert.ToBoolean(res);
         }
 
-        public async Task<IEnumerable<CDC>> GetCDC()
+        public Task<IEnumerable<CDC>> DeactivatePHI(PHI Id)
         {
-            string query = "";
-            return await _context.CDC.FromSqlRaw(query).ToListAsync();
-        }
-
-        public async Task<IEnumerable<CDC>> GetCDC(int Id)
-        {
-            return await _context.CDC.FromSqlRaw("").ToListAsync();
-        }
-
-        public async Task<IEnumerable<CDC>> GetTravelLogByCDC(double Longtitude, double Latitude)
-        {
-            return await _context.CDC.FromSqlRaw("").ToListAsync();
-        }
-
-        public async Task<bool> Update(CDC cdc)
-        {
-            var res = _context.Database.ExecuteSqlCommand("");
-
-            return Convert.ToBoolean(res);
+            throw new NotImplementedException();
         }
     }
 }
