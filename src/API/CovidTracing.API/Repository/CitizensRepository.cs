@@ -30,40 +30,45 @@ namespace CovidTracing.API.Repository
             return  _context.Citizen.FromSqlRaw(query).AsEnumerable();
         }
 
-        public async Task<IEnumerable<PHI>> GetTravelLog(double Longtitude, double Latitude)
+        public async Task<bool> ActiveCitizen(int id)
         {
-            string query = "";
-            return _context.PHI.FromSqlRaw(query).AsEnumerable();
+            var res = _context.Database.ExecuteSqlCommand("EXEC ActivateCitizen @id="+id+"");
+
+
+            return Convert.ToBoolean(res);
         }
 
-        public Task<IEnumerable<Citizen>> UpdateTravel(double Latitude, double Longtitude)
+        public async Task<bool> DeactivateCitizen(int id)
         {
-            throw new NotImplementedException();
+            var res = _context.Database.ExecuteSqlCommand("EXEC DeactivateCitizen @id=" + id + "");
+
+
+            return Convert.ToBoolean(res);
         }
 
-        public Task Create(Citizen citizens)
+        public async Task<bool> Create(Citizen citizens)
         {
-            throw new NotImplementedException();
+            var res = _context.Database.ExecuteSqlCommand("EXEC InsCitizen @Name="+citizens.Name+ ",@Age="+citizens.Age+ ",@NIC="+citizens.NIC+ ",@Address="+citizens.Address+ ",@Proffession="+citizens.Proffession+ ",@Email="+citizens.Email+ ",@Affiliation="+citizens.Affiliation+ ",@Password="+citizens.Password+ ",@HealthStatus="+citizens.HealthStatus+ ",@Latitude="+citizens.Latitude+ ",@Longtitude="+citizens.Longtitude+"");
+
+
+            return Convert.ToBoolean(res);
         }
 
-        public Task<bool> Update(Citizen citizens)
+        public async Task<bool> Update(Citizen citizens)
         {
-            throw new NotImplementedException();
+            var res = _context.Database.ExecuteSqlCommand("EXEC UpdCitizen @Id=" + citizens.Id + ",@Name=" + citizens.Name + ",@Age=" + citizens.Age + ",@NIC=" + citizens.NIC + ",@Address=" + citizens.Address + ",@Proffession=" + citizens.Proffession + ",@Email=" + citizens.Email + ",@Affiliation=" + citizens.Affiliation + ",@Password=" + citizens.Password + ",@HealthStatus=" + citizens.HealthStatus + ",@Latitude=" + citizens.Latitude + ",@Longtitude="+citizens.Longtitude+"");
+
+            return Convert.ToBoolean(res);
         }
 
-        public Task<bool> Delete(int Id)
+        public async Task<bool> Delete(int Id)
         {
-            throw new NotImplementedException();
+            var res = _context.Database.ExecuteSqlCommand("EXEC DelCitizen @id=" + Id + "");
+
+
+            return Convert.ToBoolean(res);
         }
 
-        public Task<bool> ActiveCitizen(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> DeactivateCitizen(int id)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }
