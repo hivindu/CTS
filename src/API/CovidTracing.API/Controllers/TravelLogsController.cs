@@ -12,7 +12,7 @@ using System.Net;
 
 namespace CovidTracing.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class TravelLogsController : ControllerBase
     {

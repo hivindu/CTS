@@ -12,7 +12,7 @@ using CovidTracing.API.Repository.Interface;
 
 namespace CovidTracing.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class CitizensController : ControllerBase
     {
@@ -54,6 +54,20 @@ namespace CovidTracing.API.Controllers
         public async Task<ActionResult<CDC>> Delete(int id)
         {
             return Ok(await _repository.Delete(id));
+        }
+
+        [HttpPut("[action]/{id}")]
+        [ProducesResponseType(typeof(Citizen), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> ActiveCitizen([FromBody] int id)
+        {
+            return Ok(await _repository.ActiveCitizen(id));
+        }
+
+        [HttpPut("[action]/{id}")]
+        [ProducesResponseType(typeof(Citizen), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> DeactivateCitizen([FromBody] int id)
+        {
+            return Ok(await _repository.DeactivateCitizen(id));
         }
 
         [HttpPut("{id}")]
