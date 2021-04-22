@@ -11,10 +11,8 @@ namespace CovidTracing.API.Repository
 {
     public class CDCRepository : ICDCRepository
     {
-        // Error correction POINT - 1
         private readonly CovidTracingAPIDBContext _context;
 
-        //Error correction - POINT 2
         public CDCRepository(CovidTracingAPIDBContext context)
         {
             _context = context;
@@ -33,19 +31,16 @@ namespace CovidTracing.API.Repository
         }
 
 
-        public async Task Create(CDC cdc)
+        public async Task<bool> Create(CDC cdc)
         {
-            int id = cdc.Id;
-            string name = cdc.Name;
-            string nic = cdc.NIC;
-            string password = cdc.Password;
+            var res = _context.Database.ExecuteSqlCommand("EXEC InsCDC @Name=" + cdc.Name + ",@NIC=" + cdc.NIC + ",@Password=" + cdc.Password + ";");
 
-            //var rest = _context.Database
+            return Convert.ToBoolean(res);
         }
 
         public async Task<bool> Update(CDC cdc)
         {
-            var res = _context.Database.ExecuteSqlCommand("");
+            var res = _context.Database.ExecuteSqlCommand("EXEC UpdCDC @Id="+cdc.Id+ ",@Name="+cdc.Name+ ",@NIC="+cdc.NIC+ ",@Password="+cdc.Password+";");
 
             return Convert.ToBoolean(res);
         }
@@ -54,7 +49,7 @@ namespace CovidTracing.API.Repository
         {
             string query = "";
 
-            var res = _context.Database.ExecuteSqlCommand("");
+            var res = _context.Database.ExecuteSqlCommand("EXEC DelCDC @id="+Id+"");
 
             return Convert.ToBoolean(res);
         }

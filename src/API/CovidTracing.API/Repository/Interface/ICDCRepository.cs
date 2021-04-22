@@ -12,7 +12,7 @@ namespace CovidTracing.API.Repository.Interface
 
         Task<IEnumerable<CDC>> GetCDC(int Id);
 
-        Task Create(CDC cdc);
+        Task<bool> Create(CDC cdc);
 
         Task<bool> Update(CDC cdc);
 
