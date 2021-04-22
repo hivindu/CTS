@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CovidTracing.API.Data;
 using CovidTracing.API.Entities;
+using CovidTracing.API.Repository.Interface;
+using System.Net;
 
 namespace CovidTracing.API.Controllers
 {
@@ -14,97 +16,75 @@ namespace CovidTracing.API.Controllers
     [ApiController]
     public class TravelLogsController : ControllerBase
     {
-        private readonly CovidTracingAPIDBContext _context;
+        private readonly ITravelLogRepository _repository;
 
-        public TravelLogsController(CovidTracingAPIDBContext context)
+        public TravelLogsController(ITravelLogRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: api/TravelLogs
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<TravelLog>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<TravelLog>>> GetTravelLog()
         {
-            return await _context.TravelLog.ToListAsync();
+            var tr =  await _repository.GetTravelLog();
+
+            return Ok(tr);
         }
 
         // GET: api/TravelLogs/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TravelLog>> GetTravelLog(int id)
+        [HttpGet("{id}", Name = "GetLog")]
+        [ProducesResponseType(typeof(IEnumerable<TravelLog>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<TravelLog>>> GetTravelLog(int id)
         {
-            var travelLog = await _context.TravelLog.FindAsync(id);
+            var travelLog = await _repository.GetTravelLogbyId(id);
 
             if (travelLog == null)
             {
                 return NotFound();
             }
 
-            return travelLog;
+            return Ok(travelLog);
         }
 
-        // PUT: api/TravelLogs/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTravelLog(int id, TravelLog travelLog)
+        [HttpGet("[action]/{Latitude}/{longtitude}")]
+        [ProducesResponseType(typeof(IEnumerable<Citizen>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<Citizen>>> GetCitizensbyTravelLocations(float Latitude,float longtitude)
         {
-            if (id != travelLog.Id)
+            var travelLog = await _repository.GetCitizensbyTravelLocations(longtitude,longtitude);
+
+            if (travelLog == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(travelLog).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TravelLogExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(travelLog);
         }
 
-        // POST: api/TravelLogs
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [HttpPut]
+        [ProducesResponseType(typeof(TravelLog), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> PutTravelLog([FromBody] TravelLog travelLog)
+        {
+            return Ok(await _repository.UpdateTravelLog(travelLog));
+        }
+
+        
         [HttpPost]
         public async Task<ActionResult<TravelLog>> PostTravelLog(TravelLog travelLog)
         {
-            _context.TravelLog.Add(travelLog);
-            await _context.SaveChangesAsync();
+            await _repository.AddTravelLog(travelLog);
 
-            return CreatedAtAction("GetTravelLog", new { id = travelLog.Id }, travelLog);
+            return CreatedAtAction("GetRooms", new { id = travelLog.Id }, travelLog);
         }
 
         // DELETE: api/TravelLogs/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(TravelLog), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<TravelLog>> DeleteTravelLog(int id)
         {
-            var travelLog = await _context.TravelLog.FindAsync(id);
-            if (travelLog == null)
-            {
-                return NotFound();
-            }
-
-            _context.TravelLog.Remove(travelLog);
-            await _context.SaveChangesAsync();
-
-            return travelLog;
+            return Ok(await _repository.DeleteTravelLog(id));
         }
 
-        private bool TravelLogExists(int id)
-        {
-            return _context.TravelLog.Any(e => e.Id == id);
-        }
     }
 }
