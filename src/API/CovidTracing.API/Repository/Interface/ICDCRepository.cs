@@ -12,8 +12,6 @@ namespace CovidTracing.API.Repository.Interface
 
         Task<IEnumerable<CDC>> GetCDC(int Id);
 
-        Task<IEnumerable<CDC>> DeactivatePHI(PHI Id);
-
         Task Create(CDC cdc);
 
         Task<bool> Update(CDC cdc);

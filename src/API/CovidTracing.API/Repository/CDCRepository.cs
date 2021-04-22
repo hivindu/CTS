@@ -59,9 +59,5 @@ namespace CovidTracing.API.Repository
             return Convert.ToBoolean(res);
         }
 
-        public Task<IEnumerable<CDC>> DeactivatePHI(PHI Id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

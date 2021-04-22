@@ -31,33 +31,41 @@ namespace CovidTracing.API.Repository
         }
 
 
-        public Task<bool> AcvtivatePHI(int ID)
+        public async Task<bool> AcvtivatePHI(int ID)
         {
-            throw new NotImplementedException();
+            var res = _context.Database.ExecuteSqlCommand("EXEC ActivatePHI @id=" + ID + "");
+
+
+            return Convert.ToBoolean(res);
         }
 
-        public Task<bool> DeactivatePHI(int id)
+        public async Task<bool> DeactivatePHI(int id)
         {
-            throw new NotImplementedException();
+            var res = _context.Database.ExecuteSqlCommand("EXEC DeactivatePHI @id=" + id + "");
+
+
+            return Convert.ToBoolean(res);
         }
 
-        public Task<IEnumerable<PHI>> UpdateCitizen(int id)
+        public async  Task<bool> Create(PHI phi)
         {
-            throw new NotImplementedException();
-        }
-        public Task Create(PHI phi)
-        {
-            throw new NotImplementedException();
+            var res = _context.Database.ExecuteSqlCommand("EXEC UpdPHI InsPHI @Name ="+phi.Name+ ",@age="+phi.Age+ ",@NIC="+phi.NIC+ ",@Address="+phi.Address+ ",@Email="+phi.Email+ ",@Affiliation="+phi.Affiliation+ ",@Password="+phi.Password+"");
+
+            return Convert.ToBoolean(res);
         }
 
-        public Task<bool> Update(PHI phi)
+        public async Task<bool> Update(PHI phi)
         {
-            throw new NotImplementedException();
+            var res = _context.Database.ExecuteSqlCommand("EXEC UpdPHI @id="+phi.Id+ ",@age="+phi.Age+ ",@NIC="+phi.NIC+ ",@Address="+phi.Address+ ",@Email="+phi.Email+ ",@Affiliation="+phi.Affiliation+ ",@Password="+phi.Password+"");
+
+            return Convert.ToBoolean(res);
         }
 
-        public Task<bool> Delete(int Id)
+        public async Task<bool> Delete(int Id)
         {
-            throw new NotImplementedException();
+            var res = _context.Database.ExecuteSqlCommand("EXEC DelPHI @id=" + Id+ "");
+
+            return Convert.ToBoolean(res);
         }
 
     }

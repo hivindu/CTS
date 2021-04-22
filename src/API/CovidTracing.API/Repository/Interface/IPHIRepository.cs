@@ -12,13 +12,11 @@ namespace CovidTracing.API.Repository.Interface
 
         Task<IEnumerable<PHI>> GetPHI(int Id);
 
-        Task<IEnumerable<PHI>> UpdateCitizen(int id);
-
         Task<bool> AcvtivatePHI(int ID);
 
         Task<bool> DeactivatePHI(int id);
 
-        Task Create(PHI phi);
+        Task<bool> Create(PHI phi);
 
         Task<bool> Update(PHI phi);
 
