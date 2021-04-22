@@ -39,7 +39,7 @@ namespace CovidTracing.API
             services.AddSingleton<ICDCRepository,CDCRepository>();
             services.AddSingleton<ICitizensRepository,CitizensRepository>();
             services.AddSingleton<ITravelLogRepository, TravelLogRepository>();
-
+            services.AddSingleton<IShopRepository, ShopRepository>();
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CovidTracingAPI", Version = "v1" });
             });
