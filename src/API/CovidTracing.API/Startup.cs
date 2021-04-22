@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using CovidTracing.API.Data;
 using CovidTracing.API.Repository.Interface;
 using CovidTracing.API.Repository;
+using Microsoft.OpenApi.Models;
 
 namespace CovidTracing.API
 {
@@ -37,6 +38,10 @@ namespace CovidTracing.API
             services.AddSingleton<IPHIRepository,PHIRepository>();
             services.AddSingleton<ICDCRepository,CDCRepository>();
             services.AddSingleton<ICitizensRepository,CitizensRepository>();
+            services.AddSingleton<ITravelLogRepository, TravelLogRepository>();
+            services.AddSwaggerGen(c => {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Covid Tracking API", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +62,9 @@ namespace CovidTracing.API
             {
                 endpoints.MapControllers();
             });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Covid Tracking API v1"); });
         }
     }
 }

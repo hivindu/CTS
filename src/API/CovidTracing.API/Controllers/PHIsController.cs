@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CovidTracing.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class PHIsController : ControllerBase
     {
