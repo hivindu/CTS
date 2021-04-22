@@ -77,18 +77,6 @@ namespace CovidTracing.API.Controllers
             return CreatedAtAction("GetCitizen", new { id = citizen.Id }, citizen);
         }
 
-        [HttpGet("[action]/{latitude, longtitude}")]
-        [ProducesResponseType(typeof(IEnumerable<Citizen>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Citizen>> UpdateTravel(double longtitude, double latitude)
-        {
-            var citizen = await _repository.UpdateTravel(longtitude, latitude);
-
-            if (citizen == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(citizen);
-        }
+       
     }
 }

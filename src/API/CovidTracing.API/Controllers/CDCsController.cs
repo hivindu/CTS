@@ -51,19 +51,7 @@ namespace CovidTracing.API.Controllers
 
         
 
-        [HttpGet("[action]/{id}")]
-        [ProducesResponseType(typeof(IEnumerable<CDC>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<CDC>> DeactivatePHI(PHI Id)
-        {
-            var cdc = await _repository.DeactivatePHI(Id);
-
-            if (cdc == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(cdc);
-        }
+       
 
 
         // POST api/<CTSController>

@@ -1,5 +1,7 @@
-﻿using CovidTracing.API.Entities;
+﻿using CovidTracing.API.Data;
+using CovidTracing.API.Entities;
 using CovidTracing.API.Repository.Interface;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,34 +11,49 @@ namespace CovidTracing.API.Repository
 {
     public class TravelLogRepository : ITravelLogRepository
     {
-        public Task<bool> AddTravelLog()
+        private readonly CovidTracingAPIDBContext _context;
+
+        public TravelLogRepository(CovidTracingAPIDBContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+        public async Task<IEnumerable<TravelLog>> GetTravelLog()
+        {
+            string query = "EXEC SelAllTravelLog;";
+            return await _context.TravelLog.FromSqlRaw(query).ToListAsync();
         }
 
-        public Task<bool> DeleteTravelLog(int id)
+        public async Task<IEnumerable<TravelLog>> GetTravelLogbyId(int id)
         {
-            throw new NotImplementedException();
+            string query = "EXEC SelTravelLogById @id="+id+";";
+            return  _context.TravelLog.FromSqlRaw(query).AsEnumerable();
         }
 
-        public Task<List<Citizen>> GetCitizensbyTravelLocations(double Latitude, double longtitude)
+        public async Task<IEnumerable<Citizen>> GetCitizensbyTravelLocations(double Latitude, double longtitude)
         {
-            throw new NotImplementedException();
+            string query = "EXEC SelCitizensByLocation @Lat="+Latitude+ ",@Longtitude="+longtitude+";";
+            return await _context.Citizen.FromSqlRaw(query).ToListAsync();
         }
 
-        public Task<List<TravelLog>> GetTravelLog()
+        public async Task<bool> AddTravelLog(TravelLog travelLogS)
         {
-            throw new NotImplementedException();
+            var res = _context.Database.ExecuteSqlCommand("EXEC InsTravelLog @CID="+travelLogS.CID+ ",@Lat="+travelLogS.Lat+ ",@Long="+travelLogS.Long+"");
+
+            return Convert.ToBoolean(res);
         }
 
-        public Task<TravelLog> GetTravelLogbyId(int id)
+        public async Task<bool> UpdateTravelLog(TravelLog travelLog)
         {
-            throw new NotImplementedException();
+            var res = _context.Database.ExecuteSqlCommand("EXEC UpdTravelLog @Id=" + travelLog.Id + ",@CID="+travelLog.CID+ ",@Lat="+travelLog.Lat+ ",@Long="+travelLog.Lat+"");
+
+            return Convert.ToBoolean(res);
         }
 
-        public Task<bool> UpdateTravelLog(TravelLog travelLog)
+        public async Task<bool> DeleteTravelLog(int id)
         {
-            throw new NotImplementedException();
+            var res = _context.Database.ExecuteSqlCommand("EXEC DelTravelLog @id=" + id + "");
+
+            return Convert.ToBoolean(res);
         }
     }
 }
