@@ -39,8 +39,9 @@ namespace CovidTracing.API
             services.AddSingleton<ICDCRepository,CDCRepository>();
             services.AddSingleton<ICitizensRepository,CitizensRepository>();
             services.AddSingleton<ITravelLogRepository, TravelLogRepository>();
+
             services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Covid Tracking API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "CovidTracingAPI", Version = "v1" });
             });
         }
 
@@ -50,6 +51,7 @@ namespace CovidTracing.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
             }
 
             app.UseHttpsRedirection();
@@ -64,7 +66,7 @@ namespace CovidTracing.API
             });
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Covid Tracking API v1"); });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "CovidTracingAPI v1"); });
         }
     }
 }

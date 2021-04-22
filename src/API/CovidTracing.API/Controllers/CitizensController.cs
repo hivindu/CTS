@@ -25,6 +25,7 @@ namespace CovidTracing.API.Controllers
 
         // GET: api/Citizens
         [ProducesResponseType(typeof(IEnumerable<CDC>), (int)HttpStatusCode.OK)]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<CDC>>> GetCitizen()
         {
             var CDC = await _repository.GetCitizen();

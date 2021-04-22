@@ -49,11 +49,6 @@ namespace CovidTracing.API.Controllers
             return Ok(cdc);
         }
 
-        
-
-       
-
-
         // POST api/<CTSController>
         [HttpPost]
         public async Task<ActionResult<CDC>> CreateCDC(CDC cdc)

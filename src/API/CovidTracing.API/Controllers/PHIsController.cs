@@ -21,6 +21,7 @@ namespace CovidTracing.API.Controllers
         }
 
         // GET: api/PHIs
+        [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<PHI>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<PHI>>> GetPHI()
         {
