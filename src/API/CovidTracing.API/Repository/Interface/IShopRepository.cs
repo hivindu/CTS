@@ -14,6 +14,10 @@ namespace CovidTracing.API.Repository.Interface
 
         Task<IEnumerable<Shop>> GetShopByBR(string br);
 
+        Task<bool> ApproveShop(int id);
+
+        Task<bool> RejectShop(int id);
+
         Task<bool> Create(Shop shop);
         Task<bool> Update(Shop shop);
         Task<bool> Delete(int Id);

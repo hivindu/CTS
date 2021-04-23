@@ -7,18 +7,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CovidTracing.API.Data;
 using CovidTracing.API.Entities;
+using CovidTracing.API.Repository.Interface;
 
 namespace CovidTracing.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class ShopsController : ControllerBase
     {
-        private readonly CovidTracingAPIDBContext _context;
+        private readonly IShopRepository _repository;
 
-        public ShopsController(CovidTracingAPIDBContext context)
+        public ShopsController(IShopRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: api/Shops
@@ -45,8 +46,8 @@ namespace CovidTracing.API.Controllers
         // PUT: api/Shops/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutShop(int id, Shop shop)
+        [HttpPut]
+        public async Task<IActionResult> PutShop([FromBody] Shop shop)
         {
             if (id != shop.Id)
             {
@@ -74,9 +75,6 @@ namespace CovidTracing.API.Controllers
             return NoContent();
         }
 
-        // POST: api/Shops
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Shop>> PostShop(Shop shop)
         {

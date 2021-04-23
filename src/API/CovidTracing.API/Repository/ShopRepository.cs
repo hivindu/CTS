@@ -1,4 +1,5 @@
-﻿using CovidTracing.API.Entities;
+﻿using CovidTracing.API.Data;
+using CovidTracing.API.Entities;
 using CovidTracing.API.Repository.Interface;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,13 @@ namespace CovidTracing.API.Repository
 {
     public class ShopRepository : IShopRepository
     {
+        private readonly CovidTracingAPIDBContext _context;
+
+        public ShopRepository(CovidTracingAPIDBContext context)
+        {
+            _context = context;
+        }
+
         public Task<IEnumerable<Shop>> GetShops()
         {
             throw new NotImplementedException();
@@ -20,6 +28,16 @@ namespace CovidTracing.API.Repository
         }
 
         public Task<IEnumerable<Shop>> GetShopByBR(string br)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> ApproveShop(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> RejectShop(int id)
         {
             throw new NotImplementedException();
         }
@@ -37,5 +55,6 @@ namespace CovidTracing.API.Repository
         {
             throw new NotImplementedException();
         }
+
     }
 }
