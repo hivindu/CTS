@@ -23,5 +23,7 @@ namespace CovidTracing.API.Data
         public DbSet<CovidTracing.API.Entities.TravelLog> TravelLog { get; set; }
 
         public DbSet<CovidTracing.API.Entities.Shop> Shop { get; set; }
+
+        public DbSet<CovidTracing.API.Entities.PCR> PCR { get; set; }
     }
 }
