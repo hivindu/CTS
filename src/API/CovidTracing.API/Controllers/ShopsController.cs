@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using CovidTracing.API.Data;
 using CovidTracing.API.Entities;
 using CovidTracing.API.Repository.Interface;
+using System.Net;
 
 namespace CovidTracing.API.Controllers
 {
@@ -24,85 +25,79 @@ namespace CovidTracing.API.Controllers
 
         // GET: api/Shops
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<Shop>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<Shop>>> GetShop()
         {
-            return await _context.Shop.ToListAsync();
+            var tr = await _repository.GetShops();
+
+            return Ok(tr);
         }
 
         // GET: api/Shops/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name ="GetShop")]
+        [ProducesResponseType(typeof(IEnumerable<Shop>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<Shop>> GetShop(int id)
         {
-            var shop = await _context.Shop.FindAsync(id);
+            var shop = await _repository.GetShop(id);
 
             if (shop == null)
             {
                 return NotFound();
             }
 
-            return shop;
+            return Ok(shop);
         }
 
-        // PUT: api/Shops/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [HttpGet("[action/]{BR}")]
+        [ProducesResponseType(typeof(IEnumerable<Shop>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<Shop>> GetShopByBR(string BR)
+        {
+            var shop = await _repository.GetShopByBR(BR);
+
+            if (shop == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(shop);
+        }
+
         [HttpPut]
+        [ProducesResponseType(typeof(Shop), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> PutShop([FromBody] Shop shop)
         {
-            if (id != shop.Id)
-            {
-                return BadRequest();
-            }
+            return Ok(await _repository.Update(shop));
+        }
 
-            _context.Entry(shop).State = EntityState.Modified;
+        [HttpPut("[action]/{id}")]
+        [ProducesResponseType(typeof(Shop), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> ApproveShop(int id)
+        {
+            return Ok(await _repository.ApproveShop(id));
+        }
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ShopExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+        [HttpPut("[action]/{id}")]
+        [ProducesResponseType(typeof(Shop), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> RejectShop(int id)
+        {
+            return Ok(await _repository.RejectShop(id));
         }
 
         [HttpPost]
         public async Task<ActionResult<Shop>> PostShop(Shop shop)
         {
-            _context.Shop.Add(shop);
-            await _context.SaveChangesAsync();
+            await _repository.Create(shop);
 
-            return CreatedAtAction("GetShop", new { id = shop.Id }, shop);
+            return CreatedAtAction("GetRooms", new { id = shop.Id }, shop);
         }
 
         // DELETE: api/Shops/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(Shop), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<Shop>> DeleteShop(int id)
         {
-            var shop = await _context.Shop.FindAsync(id);
-            if (shop == null)
-            {
-                return NotFound();
-            }
-
-            _context.Shop.Remove(shop);
-            await _context.SaveChangesAsync();
-
-            return shop;
+            return Ok(await _repository.Delete(id));
         }
 
-        private bool ShopExists(int id)
-        {
-            return _context.Shop.Any(e => e.Id == id);
-        }
     }
 }
