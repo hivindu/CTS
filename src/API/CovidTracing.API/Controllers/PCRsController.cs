@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CovidTracing.API.Data;
 using CovidTracing.API.Entities;
+using CovidTracing.API.Repository.Interface;
 
 namespace CovidTracing.API.Controllers
 {
@@ -14,18 +15,18 @@ namespace CovidTracing.API.Controllers
     [ApiController]
     public class PCRsController : ControllerBase
     {
-        private readonly CovidTracingAPIDBContext _context;
+        private readonly IPCRRepository _repository;
 
-        public PCRsController(CovidTracingAPIDBContext context)
+        public PCRsController(IPCRRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: api/PCRs
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PCR>>> GetPCR()
         {
-            return await _context.PCR.ToListAsync();
+            return await _repository.GetRequests();
         }
 
         // GET: api/PCRs/5
