@@ -8,10 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using CovidTracing.API.Data;
 using CovidTracing.API.Entities;
 using CovidTracing.API.Repository.Interface;
+using System.Net;
 
 namespace CovidTracing.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class PCRsController : ControllerBase
     {
@@ -24,55 +25,51 @@ namespace CovidTracing.API.Controllers
 
         // GET: api/PCRs
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<PCR>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<PCR>>> GetPCR()
         {
-            return await _repository.GetRequests();
+            var pcr = await _repository.GetRequests();
+
+            return Ok(pcr);
         }
 
-        // GET: api/PCRs/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<PCR>> GetPCR(int id)
+        [HttpGet("{id}",Name ="GetPCR")]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(PCR), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<PCR>> GetRequestbyId(int id)
         {
-            var pCR = await _context.PCR.FindAsync(id);
+            var phi = await _repository.GetRequestById(id);
 
-            if (pCR == null)
+            if (phi == null)
             {
                 return NotFound();
             }
 
-            return pCR;
+            return Ok(phi);
         }
 
-        // PUT: api/PCRs/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPCR(int id, PCR pCR)
+        // GET: api/PCRs/5
+        [HttpGet("[action]/{cid}")]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(PCR), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<PCR>> GetRequestbyCID(int cid)
         {
-            if (id != pCR.Id)
+            var phi = await _repository.GetRequestbyCID(cid);
+
+            if (phi == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(pCR).State = EntityState.Modified;
+            return Ok(phi);
+        }
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PCRExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+        
+        [HttpPut]
+        [ProducesResponseType(typeof(PCR), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> PutPCR([FromBody]PCR pCR)
+        {
+            return Ok(await _repository.Update(pCR));
         }
 
         // POST: api/PCRs
@@ -81,31 +78,18 @@ namespace CovidTracing.API.Controllers
         [HttpPost]
         public async Task<ActionResult<PCR>> PostPCR(PCR pCR)
         {
-            _context.PCR.Add(pCR);
-            await _context.SaveChangesAsync();
+            await _repository.Create(pCR);
 
             return CreatedAtAction("GetPCR", new { id = pCR.Id }, pCR);
         }
 
         // DELETE: api/PCRs/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(PCR), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<PCR>> DeletePCR(int id)
         {
-            var pCR = await _context.PCR.FindAsync(id);
-            if (pCR == null)
-            {
-                return NotFound();
-            }
-
-            _context.PCR.Remove(pCR);
-            await _context.SaveChangesAsync();
-
-            return pCR;
+            return Ok(await _repository.Delete(id));
         }
 
-        private bool PCRExists(int id)
-        {
-            return _context.PCR.Any(e => e.Id == id);
-        }
     }
 }

@@ -18,15 +18,21 @@ namespace CovidTracing.API.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<PCR>> GetRequestbyCID(int cid)
-        {
-            string query = "EXEC SelPCRById @cid=" + cid + ";";
-            return await _context.PCR.FromSqlRaw(query).ToListAsync();
-        }
-
         public async Task<IEnumerable<PCR>> GetRequests()
         {
             string query = "EXEC SelAllPCR ;";
+            return await _context.PCR.FromSqlRaw(query).ToListAsync();
+        }
+
+        public async Task<IEnumerable<PCR>> GetRequestById(int id)
+        {
+            string query = "EXEC SelPCRId @id="+id+";";
+            return  _context.PCR.FromSqlRaw(query).AsEnumerable();
+        }
+
+        public async Task<IEnumerable<PCR>> GetRequestbyCID(int cid)
+        {
+            string query = "EXEC SelPCRById @cid=" + cid + ";";
             return await _context.PCR.FromSqlRaw(query).ToListAsync();
         }
 

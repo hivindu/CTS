@@ -9,6 +9,7 @@ namespace CovidTracing.API.Repository.Interface
     public interface IPCRRepository
     {
         Task<IEnumerable<PCR>> GetRequests();
+        Task<IEnumerable<PCR>> GetRequestById(int id);
         Task<IEnumerable<PCR>> GetRequestbyCID(int cid);
         Task<bool> Create(PCR pcr);
         Task<bool> Update(PCR pcr);
